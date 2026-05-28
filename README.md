@@ -10,11 +10,12 @@ Simple CLI utility written in Go for sorting files by extension.
   - audio
   - docs
   - archives
+	- video
 
 
 ## Roadmap
 - [x] v1.0 Basic file sorting
-- [ ] v1.1 More extensions
+- [x] v1.1 More extensions
 - [ ] v1.1 Unknown folder
 - [ ] v1.1 Statistics
 - [ ] v1.2 Dry Run
