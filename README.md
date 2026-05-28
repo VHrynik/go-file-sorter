@@ -21,21 +21,21 @@ go run main.go "D:\Downloads"
 ## Example
 Before:
 test/
-├── photo.png
-├── song.mp3
-├── archive.zip
-└── notes.txt
+  photo.png
+  song.mp3
+  archive.zip
+  notes.txt
 
 After:
 test/
-├── images/
-│   └── photo.png
-├── audio/
-│   └── song.mp3
-├── archives/
-│   └── archive.zip
-└── docs/
-    └── notes.txt
+  images/
+    photo.png
+  audio/
+    song.mp3
+  archives/
+    archive.zip
+  docs/
+    notes.txt
 
 
 ## Version
