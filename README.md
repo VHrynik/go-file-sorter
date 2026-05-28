@@ -5,12 +5,14 @@ Simple CLI utility written in Go for sorting files by extension.
 ## Features
 - Sort files by extension
 - Automatically create category folders
+```text
 - Move files into:
   - images
   - audio
   - docs
   - archives
 	- video
+```
 
 
 ## Roadmap
