@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -55,10 +56,38 @@ func main() {
 	// Создаём map: extension -> category
 	// Например: .png -> images, .mp3 -> audio
 	myMap := make(map[string]string)
+
 	myMap[".png"] = "images"
+	myMap[".jpg"] = "images"
+	myMap[".jpeg"] = "images"
+	myMap[".gif"] = "images"
+	myMap[".webp"] = "images"
+	myMap[".bmp"] = "images"
+
 	myMap[".zip"] = "archives"
+	myMap[".rar"] = "archives"
+	myMap[".7z"] = "archives"
+	myMap[".tar"] = "archives"
+	myMap[".gz"] = "archives"
+
 	myMap[".txt"] = "docs"
+	myMap[".pdf"] = "docs"
+	myMap[".docx"] = "docs"
+	myMap[".doc"] = "docs"
+	myMap[".xlsx"] = "docs"
+	myMap[".xls"] = "docs"
+	myMap[".pptx"] = "docs"
+
 	myMap[".mp3"] = "audio"
+	myMap[".wav"] = "audio"
+	myMap[".flac"] = "audio"
+	myMap[".ogg"] = "audio"
+
+	myMap[".mp4"] = "video"
+	myMap[".mkv"] = "video"
+	myMap[".avi"] = "video"
+	myMap[".mov"] = "video"
+	myMap[".webm"] = "video"
 
 	// Проходимся по каждому объекту внутри папки
 	for _, entry := range entries {
@@ -68,7 +97,7 @@ func main() {
 		}
 
 		// Получаем расширение файла. Например: image.png -> .png
-		extension := filepath.Ext(entry.Name())
+		extension := strings.ToLower(filepath.Ext(entry.Name()))
 
 		// Пытаемся найти категорию для данного extension в map.
 		// value -> category
