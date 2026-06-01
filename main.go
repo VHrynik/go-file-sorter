@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
+	"slices"
+	"sort"
 	"strings"
 )
 
@@ -89,6 +92,11 @@ func main() {
 	myMap[".mov"] = "video"
 	myMap[".webm"] = "video"
 
+	// Создаём map для статистики.
+	// category -> количество успешно перемещённых файлов
+	// Например: // images  -> 5
+	countCategory := make(map[string]int)
+
 	// Проходимся по каждому объекту внутри папки
 	for _, entry := range entries {
 		// Если объект является папкой — пропускаем его
@@ -104,39 +112,67 @@ func main() {
 		// ok    -> существует ли такой ключ
 		value, ok := myMap[extension]
 
-		// Если extension найден в map
-		if ok {
-			// Создаём путь будущей папки
-			// Например: D:\test\images
-			// filepath.Join правильно собирает пути под любую ОС
-			categoryPath := filepath.Join(folderPath, value)
-
-			//fmt.Printf("%s → %s\n", entry.Name(), value)
-			//fmt.Printf("%s → %s\n", entry.Name(), filepath.Join(folderPath, value))
-			// Создаём папку категории
-			// MkdirAll: создаёт папку, НЕ падает если папка уже существует
-			err := os.MkdirAll(categoryPath, 0755)
-
-			// Если произошла ошибка — завершаем программу
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			sourcePath := filepath.Join(folderPath, entry.Name())
-			destDir := filepath.Join(folderPath, value)
-			destPath := filepath.Join(destDir, entry.Name())
-			err = os.Rename(sourcePath, destPath)
-
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			fmt.Printf("%s → %s\n", entry.Name(), value)
-		} else {
-			// Если extension неизвестен
-			fmt.Printf("%s → unknown\n", entry.Name())
+		if !ok {
+			value = "unknown"
 		}
+
+		// Создаём путь будущей папки
+		// Например: D:\test\images
+		// filepath.Join правильно собирает пути под любую ОС
+		categoryPath := filepath.Join(folderPath, value)
+
+	
+		// Создаём папку категории
+		// MkdirAll: создаёт папку, НЕ падает если папка уже существует
+		err := os.MkdirAll(categoryPath, 0755)
+
+		// Если произошла ошибка — завершаем программу
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		sourcePath := filepath.Join(folderPath, entry.Name())
+		destPath := filepath.Join(folderPath, value, entry.Name())
+		err = os.Rename(sourcePath, destPath)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Увеличиваем счётчик для текущей категории.
+		// Например:
+		// images -> 5
+		// после увеличения:
+		// images -> 6
+		countCategory[value]++
+
+		fmt.Printf("%s → %s\n", entry.Name(), value)
 	}
+
+	fmt.Println("\nSorting completed.")
+	fmt.Println("================================================================================")
+
+	// Получаем все категории из map статистики.
+	keys := slices.Collect(maps.Keys(countCategory))
+
+	// Сортируем категории по алфавиту,
+	// чтобы вывод всегда был в одном порядке
+	sort.Strings(keys)
+
+	for _, value := range keys {
+		fmt.Printf("%s: %d\n", strings.Title(value), countCategory[value])
+	}
+
+	// Считаем общее количество перемещённых файлов
+	totalMoved := 0
+
+	// Складываем значения всех категорий,
+	// чтобы получить общий итог
+	for _, value := range countCategory {
+		totalMoved += value
+	}
+
+	fmt.Printf("\nTotal moved: %d\n", totalMoved)
 }
